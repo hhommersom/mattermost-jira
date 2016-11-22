@@ -76,6 +76,7 @@ func getMessage(request *http.Request) []byte {
 		"(on)", ":bulb:",
 		"(*)", ":star:",
 		"----", "---",
+		"{code}","```",
 		"{code:xml}", "```xml ",
 		"{code:java}", "```java ",
 		"{code:javascript}", "```javascript ",
