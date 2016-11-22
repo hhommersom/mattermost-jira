@@ -1,12 +1,12 @@
 # JIRA Mattermost Webhook Connector
-[![Go Report Card](https://goreportcard.com/badge/github.com/unco-games/mattermost-jira)](https://goreportcard.com/report/github.com/unco-games/mattermost-jira)
-[![codecov](https://codecov.io/gh/unco-games/mattermost-jira/branch/master/graph/badge.svg)](https://codecov.io/gh/unco-games/mattermost-jira)
-[![Build Status](https://travis-ci.org/unco-games/mattermost-jira.svg?branch=master)](https://travis-ci.org/unco-games/mattermost-jira)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hhommersom/mattermost-jira)](https://goreportcard.com/report/github.com/hhommersom/mattermost-jira)
+[![codecov](https://codecov.io/gh/hhommersom/mattermost-jira/branch/master/graph/badge.svg)](https://codecov.io/gh/hhommersom/mattermost-jira)
+[![Build Status](https://travis-ci.org/hhommersom/mattermost-jira.svg?branch=master)](https://travis-ci.org/hhommersom/mattermost-jira)
  
 ## For Heroku administrator
 You need Heroku application name in `https://<heroku_app_name>.herokuapp.com` format.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/unco-games/mattermost-jira)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/hhommersom/mattermost-jira)
 
 ## For Mattermost administrator
 You need incoming webhook URL in `http://<mattermost_server>/hooks/<web_hook_id>` format. Can be copied from Mattermost config.

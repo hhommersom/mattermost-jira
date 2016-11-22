@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/unco-games/mattermost-jira",
+	"ImportPath": "github.com/hhommersom/mattermost-jira",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v74",
 	"Deps": []
