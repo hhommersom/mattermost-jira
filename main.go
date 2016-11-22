@@ -62,8 +62,8 @@ func getMessage(request *http.Request) []byte {
 	wikiReplacer := strings.NewReplacer(
 		":)", ":simple_smile:",
 		":(", ":worried:",
-		":P", ":stuck_out_tongue_winking_eye:",
-		":D", ":grinning:",
+		" :P", ":stuck_out_tongue_winking_eye:", //added space, xml with namespace problem
+		" :D", ":grinning:", //xml namespace
 		";)", ":wink:",
 		"(y)", ":thumbsup:",
 		"(n)", ":thumbsdown:",
