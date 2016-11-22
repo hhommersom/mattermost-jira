@@ -48,7 +48,46 @@ type Message struct {
 	IconURL  string `json:"icon_url"`
 }
 
+
 func getMessage(request *http.Request) []byte {
+	//initialisation
+    var JiraMultilineFields = map[string]bool {
+		"Acceptance Criteria": true,
+		"Demo Script" :  true,
+		"Release Notes Text":  true,
+		"Description":  true,
+	}
+	
+	//replacer for Jira emoji
+	wikiReplacer := strings.NewReplacer(
+		":)",":simple_smile:",
+		":(",":worried:",
+		":P",":stuck_out_tongue_winking_eye:",
+		":D",":grinning:",
+		";)",":wink:",
+		"(y)",":thumbsup:",
+		"(n)",":thumbsdown:",
+		"(i)",":information_source:",
+		"(/)",":white_check_mark:",
+		"(x)",":x:",
+		"(!)",":warning:",
+		"(-)",":no_entry:",
+		"(?)",":question:",
+		"(on)",":bulb:",
+		"(*)",":star:",
+		"----", "---",
+		"{code}","```",
+		"# ", "1. ",
+		"## ", "  1. ",
+		"** ", "  * ",
+		"h1.","#",
+		"h2.","##",
+		"h3.","###",
+		"h4.","####",
+		"h5.","#####",
+		"h6.","######",
+		)
+
 	// Parse JSON from JIRA
 	decoder := json.NewDecoder(request.Body)
 	var data Data
@@ -68,9 +107,10 @@ func getMessage(request *http.Request) []byte {
 		action = "deleted"
 	}
 
+
 	//Process new comment
 	if len(data.Comment.Body) > 0 {
-		comment = fmt.Sprintf("\nComment:\n```\n%s\n```", data.Comment.Body)
+		comment = fmt.Sprintf("\nComment:\n%s\n", wikiReplacer.Replace(data.Comment.Body))
 	}
 
 	// Process changelog
@@ -81,10 +121,11 @@ func getMessage(request *http.Request) []byte {
 			if item.FromString == "" {
 				item.FromString = "None"
 			}
-			if itemName == "Description" {
+			if JiraMultilineFields[itemName]  {
 				changelog += fmt.Sprintf(
-					"\nNew Description:\n```\n%s\n```",
-					item.ToString,
+					"\nChanged %s:\n---\n%s\n",
+					itemName,
+					wikiReplacer.Replace(item.ToString),
 				)
 			} else {
 				changelog += fmt.Sprintf(
@@ -120,22 +161,28 @@ func getMessage(request *http.Request) []byte {
 		changelog,
 		comment,
 	)
+	println(text)
 
 	message := Message{
 		Text:     text,
 		Username: "JIRA",
-		IconURL:  "https://raw.githubusercontent.com/unco-games/mattermost-jira/master/logo-02.png",
+		IconURL:  "https://raw.githubusercontent.com/hhommersom/mattermost-jira/master/logo-02.png",
 	}
 
 	JSONMessage, _ := json.Marshal(message)
 
+	println(JSONMessage)
+	
 	return JSONMessage
 }
 
 func index(_ http.ResponseWriter, r *http.Request) {
 
+	println(".")
 	// Get mattermost URL
 	mattermostHookURL := r.URL.Query().Get("mattermost_hook_url")
+
+	println( mattermostHookURL)
 
 	if len(mattermostHookURL) > 0 {
 		// Get message from JIRA JSON request
