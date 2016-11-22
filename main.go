@@ -125,7 +125,7 @@ func getMessage(request *http.Request) []byte {
 			}
 			if JiraMultilineFields[itemName]  {
 				changelog += fmt.Sprintf(
-					"\nChanged %s:\n---\n%s\n",
+					"\nChanged %s:\n\n---\n%s\n",
 					itemName,
 					wikiReplacer.Replace(item.ToString),
 				)
