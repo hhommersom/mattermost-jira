@@ -56,6 +56,7 @@ func getMessage(request *http.Request) []byte {
 		"Demo Script":         true,
 		"Release Notes Text":  true,
 		"Description":         true,
+		"Deployment Notes": true,
 	}
 
 	//replacer for Jira emoji
