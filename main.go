@@ -23,8 +23,8 @@ type Data struct {
 		Key    string
 		Fields struct {
 			Issuetype struct {
-					  IconURL string
-					  Name    string
+				IconURL string
+				Name    string
 			}
 			Summary string
 		}
@@ -48,47 +48,50 @@ type Message struct {
 	IconURL  string `json:"icon_url"`
 }
 
-
 func getMessage(request *http.Request) []byte {
 	//initialisation
-    var JiraMultilineFields = map[string]bool {
+	var JiraMultilineFields = map[string]bool{
+		// move field list to configuration file?
 		"Acceptance Criteria": true,
-		"Demo Script" :  true,
+		"Demo Script":         true,
 		"Release Notes Text":  true,
-		"Description":  true,
+		"Description":         true,
 	}
-	
+
 	//replacer for Jira emoji
 	wikiReplacer := strings.NewReplacer(
-		":)",":simple_smile:",
-		":(",":worried:",
-		":P",":stuck_out_tongue_winking_eye:",
-		":D",":grinning:",
-		";)",":wink:",
-		"(y)",":thumbsup:",
-		"(n)",":thumbsdown:",
-		"(i)",":information_source:",
-		"(/)",":white_check_mark:",
-		"(x)",":x:",
-		"(!)",":warning:",
-		"(-)",":no_entry:",
-		"(?)",":question:",
-		"(on)",":bulb:",
-		"(*)",":star:",
+		":)", ":simple_smile:",
+		":(", ":worried:",
+		":P", ":stuck_out_tongue_winking_eye:",
+		":D", ":grinning:",
+		";)", ":wink:",
+		"(y)", ":thumbsup:",
+		"(n)", ":thumbsdown:",
+		"(i)", ":information_source:",
+		"(/)", ":white_check_mark:",
+		"(x)", ":x:",
+		"(!)", ":warning:",
+		"(-)", ":no_entry:",
+		"(?)", ":question:",
+		"(on)", ":bulb:",
+		"(*)", ":star:",
 		"----", "---",
-		"{code}","```",
+		"{code:xml}", "```xml ",
+		"{code:java}", "```java ",
+		"{code:javascript}", "```javascript ",
+		"{code:sql}", "```sql ",
 		"# ", "1. ",
 		"## ", "  1. ",
 		"### ", "    1. ",
 		"** ", "  * ",
 		"*** ", "    * ",
-		"h1.","#",
-		"h2.","##",
-		"h3.","###",
-		"h4.","####",
-		"h5.","#####",
-		"h6.","######",
-		)
+		"h1.", "#",
+		"h2.", "##",
+		"h3.", "###",
+		"h4.", "####",
+		"h5.", "#####",
+		"h6.", "######",
+	)
 
 	// Parse JSON from JIRA
 	decoder := json.NewDecoder(request.Body)
@@ -109,7 +112,6 @@ func getMessage(request *http.Request) []byte {
 		action = "deleted"
 	}
 
-
 	//Process new comment
 	if len(data.Comment.Body) > 0 {
 		comment = fmt.Sprintf("\nComment:\n%s\n", wikiReplacer.Replace(data.Comment.Body))
@@ -123,9 +125,9 @@ func getMessage(request *http.Request) []byte {
 			if item.FromString == "" {
 				item.FromString = "None"
 			}
-			if JiraMultilineFields[itemName]  {
+			if JiraMultilineFields[itemName] {
 				changelog += fmt.Sprintf(
-					"\nChanged %s:\n\n---\n%s\n",
+					"\nChanged **%s**:\n\n---\n%s\n",
 					itemName,
 					wikiReplacer.Replace(item.ToString),
 				)
@@ -174,7 +176,7 @@ func getMessage(request *http.Request) []byte {
 	JSONMessage, _ := json.Marshal(message)
 
 	println(JSONMessage)
-	
+
 	return JSONMessage
 }
 
@@ -184,7 +186,7 @@ func index(_ http.ResponseWriter, r *http.Request) {
 	// Get mattermost URL
 	mattermostHookURL := r.URL.Query().Get("mattermost_hook_url")
 
-	println( mattermostHookURL)
+	println(mattermostHookURL)
 
 	if len(mattermostHookURL) > 0 {
 		// Get message from JIRA JSON request
