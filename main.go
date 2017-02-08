@@ -43,9 +43,11 @@ type Data struct {
 
 // Message structure for Mattermost JSON creation.
 type Message struct {
+	Pretext  string `json:"pretext,omitempty"`
 	Text     string `json:"text"`
 	Username string `json:"username"`
 	IconURL  string `json:"icon_url"`
+	Color    string `json:"color,omitempty"`
 }
 
 func getMessage(request *http.Request) []byte {
@@ -56,7 +58,7 @@ func getMessage(request *http.Request) []byte {
 		"Demo Script":         true,
 		"Release Notes Text":  true,
 		"Description":         true,
-		"Deployment Notes": true,
+		"Deployment Notes":    true,
 	}
 
 	//replacer for Jira emoji
@@ -77,7 +79,7 @@ func getMessage(request *http.Request) []byte {
 		"(on)", ":bulb:",
 		"(*)", ":star:",
 		"----", "---",
-		"{code}","```",
+		"{code}", "```",
 		"{code:xml}", "```xml ",
 		"{code:java}", "```java ",
 		"{code:javascript}", "```javascript ",
@@ -123,6 +125,7 @@ func getMessage(request *http.Request) []byte {
 
 	// Process changelog
 	var changelog string
+	var color string
 	if len(data.Changelog.Items) > 0 {
 		for _, item := range data.Changelog.Items {
 			itemName := strings.ToUpper(string(item.Field[0])) + item.Field[1:]
@@ -139,11 +142,14 @@ func getMessage(request *http.Request) []byte {
 				changelog += fmt.Sprintf(
 					"\n%s: ~~%s~~ %s",
 					itemName,
-					item.FromString,
+					strings.Trim(item.FromString, " "),
 					item.ToString,
 				)
 			}
 		}
+	}
+	if strings.HasPrefix(data.Issue.Key, "SVD") {
+		color = "ff0000"
 	}
 
 	// Create message for Mattermost
@@ -172,6 +178,7 @@ func getMessage(request *http.Request) []byte {
 	println(text)
 
 	message := Message{
+		Color:    color,
 		Text:     text,
 		Username: "JIRA",
 		IconURL:  "https://raw.githubusercontent.com/hhommersom/mattermost-jira/master/logo-02.png",
