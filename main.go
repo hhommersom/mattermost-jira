@@ -149,7 +149,7 @@ func getMessage(request *http.Request) []byte {
 		}
 	}
 	if strings.HasPrefix(data.Issue.Key, "SVD") {
-		color = "ff0000"
+		color = "#FF0000"
 	}
 
 	// Create message for Mattermost
@@ -175,7 +175,6 @@ func getMessage(request *http.Request) []byte {
 		changelog,
 		comment,
 	)
-	println(text)
 
 	message := Message{
 		Color:    color,
